@@ -5,19 +5,19 @@ Leandro Furlam Turi
 
 ## Métodos
 ### PSO
-Utilizou-se o algoritmo PSO sugerido em aula, inicializado randomicamente dentro dos limites estabelecidos por cada exercício, e as velocidades sendo atualizadas através de uma constriction (omega), um componente histórico (v[i-1]), um componente cognitivo (phip relacionando os ótimos locais), um componente social (phig relacionando ótimo global), e respectivos valores randômicos (rp e rg). Ou seja, 
-
-v[i+1] = omega * v[i] + phip * rp[i] * (local_best[i] - x[i]) + phig * rg[i] * (global_best - x[i])
-
-Acerca dos valores destes componentes, realizou-se uma busca em grade com cada componente variando linearmente com passo 0.1 no intervalo [0.1, 1.0]. O melhor conjunto de hiperparâmetros, ou seja, o conjunto onde os resultados discorrem são apresentados problema a problema.
+Utilizou-se o algoritmo PSO sugerido em aula, inicializado randomicamente dentro dos limites estabelecidos por cada exercício, e as velocidades sendo atualizadas através de uma constriction (omega), um componente histórico (v[i-1]), um componente cognitivo (phip relacionando os ótimos locais), um componente social (phig relacionando ótimo global), e respectivos valores randômicos (rp e rg). Ou seja, v[i+1] = omega * v[i] + phip * rp[i] * (local_best[i] - x[i]) + phig * rg[i] * (global_best - x[i])
 
 
 ### Algoritmo Genético
-Novamente, utilizou-se o algoritmo sugerido em sala de aula, com a (1) seleção via torneio: seleciona-se dois indivíduos randomicamente, e o melhor é passado a frente, até completar toda a população; (2) crossover aritmético (best(beta*x_1 + (1 - beta)*x_2, beta*x_2 + (1 - beta)*x_1)) com os valores de beta ({0.1, 0.25, 0.5, 0.75, 1.0}) e probabilidade de crossover (passo 0.1 no intervalo [0.4, 0.9]) a nível de cromossomo selecionados via busca em grade, em cada problema; (3) mutação randômica linear, com a respectiva probabilidade ({0.05, 0.1, 0.2, 0.3, 0.4}) a nível de cromossomo também selecionada via busca em grade, em cada problema. Ainda, ressalta-se que houve inserção de elitismo durante o operador de seleção, com a quantidade de melhores indivíduos ({0, 1, 2, 3}) mantidos na população posterior também obtido via busca em grade, para cada problema.
+Novamente, utilizou-se o algoritmo sugerido em sala de aula, com a (1) seleção via torneio: seleciona-se dois indivíduos randomicamente, e o melhor é passado a frente, até completar toda a população; (2) crossover aritmético (best(beta*x_1 + (1 - beta)*x_2, beta*x_2 + (1 - beta)*x_1)) com probabilidade de crossover a nível de cromossomo selecionados via busca em grade, em cada problema; (3) mutação randômica linear, com a respectiva probabilidade a nível de cromossomo, em cada problema. Ainda, ressalta-se que houve inserção de elitismo durante o operador de seleção.
 
 
 ### Evolução Diferencial
-Loren Ipsum
+Inicializou-se a população randomicamente dentro dos limites estabelecidos por cada exercício, e seguindo as estratégias do método, como mutação foi dada v[i+1] = x_r1[i] + F(x_r2[i] - x_r3[i]), com x_ri escolhidos randomicamente dentro da população, e F denominado fator de mutação. Acerca da recombinação, escolheu-se aleatoriamente os cromossomos dentre x_r1[i] e v[i+1] com uma probabilidade de recombinação (pcrossover). Caso este novo individuo recombinado seja melhor que o indivíduo original, este é passado a nova geração, caso contrário, o indivíduo original que será passado adiante.
+
+
+### Estratégias Evolutivas
+Inicializou-se a população randomicamente dentro dos limites estabelecidos por cada exercício, e seguindo as estratégias do método, como recombinação foi escolhida uma local intermediária, com dois pais selecionados aleatoriamente e z_i = (x_i + y_i) / 2 como mutação foi dada a não correlatada com apenas um sigma (tamanho do passo de mutação), ou seja, sigma_i = sigma*exp(tau * N(0, 1)) e x[i+1] = x[i] + sigma_i*N(0, 1), com N(0, 1) um valor aleatório dentro da distribuição normal (0, 1). Em seguinda, selecionou-se mu pais e lambda filhos, implementando a estratégia ES(mu + lambda).
 
 
 ### Restrições
@@ -28,38 +28,51 @@ h(x) = f(x) + r*sum(phi_i^2), sendo phi_i cada uma das restrições dadas.
 
 ## Resultados
 
-Todos os valores aqui apresentados estão serializados e entregue junto a este relatório.
+Os valores dos hiperparâmetros utilizados neste relatório foram
 
-Os melhores parâmetros encontrados pela busca em grade foram:
+* PSO
+    - n 100
+    - omega 0.5
+    - phip 0.5
+    - phig0.5
 
-* PSO (omega, phip, phig)
-    - Problema 1: 0.9, 0.5, 0.3
-    - Problema 2: 0.9, 0.2, 1.0
-
-* GA (pcrossover, beta, pmutacao, elitismo)
-    - Problema 1: 0.6, 0.1, 0.05, 3
-    - Problema 2: 0.4, 0.1, 0.05, 3
+* GA
+    - n 50
+    - pcrossover 0.8
+    - beta 0.5
+    - pmutacao 0.05
+    - elitismo 3
 
 * DE (pcrossover, F, n)
-    - Problema 1: 0.6, 0.5, 50
-    - Problema 2: 0.8, 0.25, 50
+    - n 50
+    - omega 0.8
+    - F 0.5
 
-Já uma tabela contendo uma sumarização dos resultados truncadis na terceira casa decimal é apresentada a seguir:
+* ES
+    - n 50
+    - tau 0.15
+    - step_size 0.5
+    - mu 1/7
+    - lambda 6/7
 
-Método | min | max | mean | std | median | iter (mean)
---- | --- | --- | --- | --- | --- | --- |
-PSO 1 | 2196.898 | 35410.023 | 14094.097 | 6728.772 | 13956.503 | 913.100 |
-PSO 2 | 29536.605 | 125903.831 | 58943.809 | 25644.614 | 57385.182 | 3083.300 |
-GA 1 | 393314.289 | 13131701.605 | 2842632.348 | 2848197.291 | 1380058.870 | 20.600 |
-GA 2 | 434620.914 | 27189330.203 | 4969779.815 | 6022810.286 | 2388376.125 | 18.666 |
-DE 1 | 6425.766 | 12239106.618 | 2120357.687 | 2900925.053 | 826770.566 | 89.000
-DE 1 | 176057.720 | 758323139.924 | 80846299.043 | 141184495.461 | 38376538.612 | 20.966
+Acerca do critério de parada, em todos os métodos utilizou-se no máximo 10e5 iterações e tolerância entre as soluções de 1e-5.
 
-Note que embora o GA tenha uma quantidade menor de iterações (apresentando assim soluções com maior velocidade), este resultou em resultados mais variados, conforme observa-se pelo desvio e intervalo min-max.
+Uma tabela contendo uma sumarização dos resultados truncadis na terceira casa decimal é apresentada a seguir:
 
-Ainda, destaca-se que nenhum dos métodos conseguiu encontrar uma solução que fosse totalmente factível ao problema proposto, isto é, que respeitasse todas as restrições dadas. Mesmo com alguns métodos propostos pela literatura e tentativas de seeding (inserir ao menos uma solução factível) não foi possível encontrar tal indivíduo.
+Método | min | max | mean | std | median | iter (mean) | % soluções válidas
+--- | --- | --- | --- | --- | --- | --- | --- |
+PSO 1 |1082380.127 | 16505705.851 | 5973667.844 | 3710118.878 | 5402894.703 | 100000.0 | 0%* |
+PSO 2 | 408.939 | 484.412 | 430.432 | 17.297 | 428.765 | 96669.866 | 10%* |
+GA 1 | -4.762 | -0.734 | -2.833 | 1.022 | -2.681 | 32.633 | 100% |
+GA 2 | 542.294 | 726.169 | 632.566 | 38.565 | 642.330 | 22.4 | 100% |
+DE 1 | -5.707 | 0.528 | -2.522 | 1.597 | -2.457 | 36.866 | 100% |
+DE 2 | 688.550 | 101267.045 | 9046.649 | 18941.844 | 2076.678 | 6.733 | 100% |
+ES 1 | 34995.454 | 9086739.810 | 3092228.905 | 2447197.241 | 2697194.721 | 100000.0 | 0%* |
+ES 2 | 474.032 | 3498.404 | 734.434 | 544.858 | 577.224 | 4.7 | 100% |
+
+* finalizou via iteração
 
 
 ## Conclusão
 
-Embora a implementação proposta do Algoritmo Genético tenha sido veloz, esta resultou em resultados com maior variabilidade, o que torna o método susceptível ao acaso. O PSO, por sua vez, demonstrou-se ser mais fiel à solução encontrada, mesmo que com maior quantidade de iterações.
+Os métodos que melhor se adaptaram aos problemas propostos foram o GA e DE, conforme pode ser observado pelos resultados. Isto pode ser dado pelas estratégias adotadas, sendo um pouco mais sofisticadas que às adotadas pelo PSO e ES. Destaca-se ainda a baixa vairabilidade dos resultados apresentados pelo GA no primeiro problema e a baixa quantidade média de iterações. Ainda ressalta-se a não convergência dos métodos PSO e ES em alguns problemas, em que ambos finalizaram via iteração. Isto pode retratar má ajuste dos parâmetros dos métodos.
