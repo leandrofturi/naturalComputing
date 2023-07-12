@@ -121,8 +121,8 @@ def prepare_dataset(data):
     X_train, X_test, y_train, y_test = train_test_split(X, Y, 
                                                         test_size=0.25, random_state=42)
     # normalization
-    mu = np.mean(X_train)
-    sigma = np.std(X_train)
+    mu = np.mean(X_train, axis=0)
+    sigma = np.std(X_train, axis=0)
     X_train_scl = [(x - mu)/sigma for x in X_train]
     X_test_scl = [(x - mu)/sigma for x in X_test]
 
@@ -200,7 +200,21 @@ file.close()
 ### diabetes
 """
 
-X, X_test, Y, Y_test, target_map, mu, sigma = prepare_dataset(datasets.load_diabetes())
+# X, X_test, Y, Y_test, target_map, mu, sigma = prepare_dataset(datasets.load_diabetes())
+import datapackage
+import pandas as pd
+
+data_url = 'https://datahub.io/machine-learning/diabetes/datapackage.json'
+package = datapackage.Package(data_url)
+resources = package.resources
+data = []
+for resource in resources:
+    if resource.tabular:
+        data.append(pd.read_csv(resource.descriptor['path']))
+diabetes = pd.concat(data)
+data = {"target": np.array([1 if c == "tested_positive" else 0 for c in diabetes["class"]]),
+        "data": diabetes[['preg', 'plas', 'pres', 'skin', 'insu', 'mass', 'pedi', 'age']].to_numpy()}
+X, X_test, Y, Y_test, target_map, mu, sigma = prepare_dataset(data)
 
 PS = 50
 Lit = 30
@@ -274,7 +288,18 @@ print(d_breast_cancer.F, len(d_breast_cancer.history))
 print(fitness(X_test, Y_test, target_map, K, d_breast_cancer.X))
 
 
-X, X_test, Y, Y_test, target_map, mu, sigma = prepare_dataset(datasets.load_diabetes())
+# X, X_test, Y, Y_test, target_map, mu, sigma = prepare_dataset(datasets.load_diabetes())
+data_url = 'https://datahub.io/machine-learning/diabetes/datapackage.json'
+package = datapackage.Package(data_url)
+resources = package.resources
+data = []
+for resource in resources:
+    if resource.tabular:
+        data.append(pd.read_csv(resource.descriptor['path']))
+diabetes = pd.concat(data)
+data = {"target": np.array([1 if c == "tested_positive" else 0 for c in diabetes["class"]]),
+        "data": diabetes[['preg', 'plas', 'pres', 'skin', 'insu', 'mass', 'pedi', 'age']].to_numpy()}
+X, X_test, Y, Y_test, target_map, mu, sigma = prepare_dataset(data)
 K = len(target_map)
 bee_size = K * len(X[0])
 p = problem()
@@ -320,7 +345,18 @@ print(d_breast_cancer.F, len(d_breast_cancer.history))
 print(fitness(X_test, Y_test, target_map, K, d_breast_cancer.X))
 
 
-X, X_test, Y, Y_test, target_map, mu, sigma = prepare_dataset(datasets.load_diabetes())
+# X, X_test, Y, Y_test, target_map, mu, sigma = prepare_dataset(datasets.load_diabetes())
+data_url = 'https://datahub.io/machine-learning/diabetes/datapackage.json'
+package = datapackage.Package(data_url)
+resources = package.resources
+data = []
+for resource in resources:
+    if resource.tabular:
+        data.append(pd.read_csv(resource.descriptor['path']))
+diabetes = pd.concat(data)
+data = {"target": np.array([1 if c == "tested_positive" else 0 for c in diabetes["class"]]),
+        "data": diabetes[['preg', 'plas', 'pres', 'skin', 'insu', 'mass', 'pedi', 'age']].to_numpy()}
+X, X_test, Y, Y_test, target_map, mu, sigma = prepare_dataset(data)
 K = len(target_map)
 bee_size = K * len(X[0])
 p = problem()
@@ -334,3 +370,36 @@ file = open('data/ES.dat', 'wb')
 d = {"wine": d_wine, "breast_cancer": d_breast_cancer, "diabetes": d_diabetes}
 pickle.dump(d, file)
 file.close()
+
+
+# file = open('data/diabetes.dat', 'rb')
+# abc = pickle.load(file)
+# file.close()
+# file = open('data/GA.dat', 'rb')
+# ga = pickle.load(file)
+# file.close()
+# file = open('data/ES.dat', 'rb')
+# es = pickle.load(file)
+# file.close()
+
+# plt.plot(range(len(abc["hist_ABC"])), abc["hist_ABC"], label="abc")
+
+# hist_F = []
+# for algo in ga["diabetes"].history:
+#     opt = algo.opt
+#     feas = np.where(opt.get("feasible"))[0]
+#     hist_F.append(-opt.get("F")[feas][0][0])
+# plt.plot(range(len(hist_F)), hist_F, label="ga")
+
+# hist_F = []
+# for algo in es["diabetes"].history:
+#     opt = algo.opt
+#     feas = np.where(opt.get("feasible"))[0]
+#     hist_F.append(-opt.get("F")[feas][0][0])
+# plt.plot(range(len(hist_F)), hist_F, label="es")
+
+# plt.xlabel("iter")
+# plt.ylabel("acc")
+# plt.legend()
+# plt.show()
+

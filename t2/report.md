@@ -9,7 +9,7 @@ Projeto, implementação do algoritmo Artificial Bee Colony (ABC) para clusteriz
 Toda a implementação da metaheurística foi realizada utilizando apenas pacotes-padrão da linguagem Python, bem como o pacote *Numpy*. As bases de dados e a divisão da base de treino e teste foram realizadas através do pacote *Sckit-learn*.
 
 ### 1.2. Bases de dados
-Foram utilizadas as bases de dados *Breast Cancer*, *Diabetes* e *Wine*, todas disponíveis pelo *Sckit-learn*. 
+Foram utilizadas as bases de dados *Breast Cancer* e *Wine* disponíveis pelo *Sckit-learn* e *Diabetes* disponível de [*Datahub*](https://datahub.io/machine-learning/diabetes). 
 A base de dados original recebeu os tratamentos normalização z-score para as bases de entrada.
 
 ### 1.3. Algoritmo Evolutivo: Artificial Bee Colony
@@ -80,14 +80,11 @@ Para avaliar a eficácia do método, é calculada a taxa de acertos em relação
 Os resultados obtidos são apresentados na Tabela a seguir:
 Base de dados | fitness treino | fitness teste | iter | time
 --- | --- | --- | --- | ---
-Wine | 0.766917 | 0.733333 | 499 | 1min 33s
-Breast Cancer | 0.924882 | 0.930069 | 499 | 4min 07s
-Diabetes | + | + | 499 | 2h 48min 35s
+Wine | 0.962406 | 0.866666 | 499 | 1min 42s
+Breast Cancer | 0.983568 | 0.972027 | 499 | 4min 10s
+Diabetes | 0.793402 | 0.750000 | 499 | 11min 11s
 
-+: não houve convergência.
-
-Destaca-se a boa solução encontrada nas bases Wine e Breast Cancer, cuja quantidade de grupos é 3 e 2, respectivamente, com um tempo computacional satisfatório.  
-Com a Base Diabetes, possuido 214 grupos, sequer foi possível encontrar uma solução minimamente aceitável, mesmo com um tempo computacional viável.
+Destaca-se a qualidade3 solução encontrada em todas as bases analisadas, cuja quantidade de grupos é 3, 2 e 2, respectivamente, com um tempo computacional satisfatório.  
 
 
 ## 2.1. Comparação com as heurísticas GA e ES
@@ -95,27 +92,26 @@ As heurísticas GA e ES utilizanas nesta comparação são as provenientes do pa
 
 Destaca-se que apenas houve comparação em relação à qualidade da solição, visto que a implementação deste pacote é mais otimizada.
 
-
 Wine
 Herística | fitness treino | fitness teste | iter
 --- | --- | --- | ---
-ABC | 0.766917 | 0.733333 | 499
-GA  | 0.684210 | 0.711111 | 47
-ES  | 0.684210 | 0.733333 | 77
+ABC | 0.962406 | 0.866666 | 499
+GA  | 0.721804 | 0.711111 | 68
+ES  | 0.736842 | 0.755555 | 51
 
 Breast Cancer 
 Herística | fitness treino | fitness teste | iter
 --- | --- | --- | ---
-ABC | 0.924882 | 0.930069 | 499
-GA  | 0.903755 | 0.944055 | 75
-ES  | 0.913145 | 0.944055 | 71
+ABC | 0.983568 | 0.972027 | 499
+GA  | 0.953051 | 0.958041 | 83
+ES  | 0.960093 | 0.937062 | 42
 
 Diabetes
 Herística | fitness treino | fitness teste | iter
 --- | --- | --- | ---
-ABC | + | + | 499
-GA  | + | + | 51
-ES  | + | + | 38
+ABC | 0.793402 | 0.750000 | 499
+GA  | 0.762152 | 0.755208 | 103
+ES  | 0.757812 | 0.700520 | 52
 
 A convergência em cada base de dados é apresentada nas Figuras a seguir
 
@@ -130,5 +126,5 @@ Diabetes
 
 
 ## 3. Conclusão
-Dada sua natureza semelhante às demais heurísticas Genéticas estudadas, o ABC demonstrou ser um bom candidato à classificação de dados quando o número de grupos é pequeno. Sua estrutura simples, porém poderosa, permitiu encontrar uma boa solução nas bases Wine e Breast Cancer. Caso este que não ocorreu para base Diabetes.  
+Dada sua natureza semelhante às demais heurísticas Genéticas estudadas, o ABC demonstrou ser um bom candidato à classificação de dados quando o número de grupos é pequeno. Sua estrutura simples, porém poderosa, permitiu encontrar boas soluções em todas as bases analisadas.  
 Destaca-se que sua implementação computacional pode ser otimizada e paralelizada, de forma a diminuir o tempo de execução.
